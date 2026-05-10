@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { nextAvatarState } from "../../src/domain/avatar-state";
-import type { AvatarState, QuestEvent } from "../../src/domain/quest";
+import { nextAvatarState, type AvatarState, type QuestEvent } from "../../src/domain";
 
 describe("nextAvatarState", () => {
   it("maps every daily-loop state and event combination deterministically", () => {
