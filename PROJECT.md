@@ -190,6 +190,8 @@ Standard Supabase Auth user. We extend with a `profiles` table.
 
 ### `quests`
 
+Mirrors the `Quest` discriminated union in `src/domain/types.ts` (`status` + `completed_at`).
+
 | Column         | Type        | Notes                                                                                                                                                                                                                        |
 | -------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `id`           | uuid (PK)   |                                                                                                                                                                                                                              |
@@ -198,24 +200,29 @@ Standard Supabase Auth user. We extend with a `profiles` table.
 | `arc_id`       | text        | References a static arc def (e.g. `mount-aera`)                                                                                                                                                                              |
 | `target_days`  | int         | MVP: 30                                                                                                                                                                                                                      |
 | `started_at`   | timestamptz |                                                                                                                                                                                                                              |
-| `completed_at` | timestamptz | Null until summit reached                                                                                                                                                                                                    |
+| `completed_at` | timestamptz | Set when `status = 'completed'` (summit reached); must be null for `active` and `abandoned` (see CHECK constraints below)                                                                                                    |
 | `current_step` | int         | 0-indexed position on the path                                                                                                                                                                                               |
-| `is_active`    | boolean     | Only one active quest per user (enforced)                                                                                                                                                                                    |
+| `status`       | text        | NOT NULL. Enum: `'active'` \| `'completed'` \| `'abandoned'`. Only one `active` quest per user (app / migration enforced).                                                                                                   |
 | `avatar_state` | text        | NOT NULL, default `'idle'`. Enum: `'idle'` \| `'walking'` \| `'climbing'` \| `'slipping'` \| `'celebrating'` \| `'resting'`. Current avatar state for animation rendering; updated by `applyCheckIn` (§8) on every check-in. |
+
+**CHECK constraints (match domain union):**
+
+- `status = 'completed'` ⇒ `completed_at IS NOT NULL`
+- `status IN ('active', 'abandoned')` ⇒ `completed_at IS NULL`
 
 ### `check_ins`
 
-| Column       | Type        | Notes                           |
-| ------------ | ----------- | ------------------------------- |
-| `id`         | uuid (PK)   |                                 |
-| `quest_id`   | uuid (FK)   |                                 |
-| `local_date` | date        | The user-local calendar day     |
-| `status`     | enum        | `done` \| `skipped` \| `missed` |
-| `created_at` | timestamptz |                                 |
+| Column       | Type        | Notes                                                                                                                            |
+| ------------ | ----------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `id`         | uuid (PK)   |                                                                                                                                  |
+| `quest_id`   | uuid (FK)   |                                                                                                                                  |
+| `local_date` | date        | User-local calendar day. Postgres `date` (not `text`, not `timestamptz`); maps to an ISO date string on `CheckIn` in TypeScript. |
+| `status`     | text        | NOT NULL. Enum: `done` \| `skipped` \| `missed` (matches `CheckInStatus`)                                                        |
+| `created_at` | timestamptz |                                                                                                                                  |
 
 Unique constraint on `(quest_id, local_date)` — one check-in per day per quest.
 
-Before insert, the domain layer may build rows as `NewCheckIn` (`id` and `created_at` omitted); repositories persist and return `CheckIn`.
+Pre-insertion shape (`NewCheckIn`): see `src/domain/types.ts` — omits `id` and `created_at`; repositories persist and return `CheckIn`.
 
 ### `streaks` (derived, materialized for speed)
 
