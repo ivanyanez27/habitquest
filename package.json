@@ -1,0 +1,63 @@
+{
+  "name": "habitquest",
+  "version": "0.1.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "lint": "eslint . --max-warnings=0 && pnpm format:check && pnpm lint:domain-boundaries",
+    "lint:domain-boundaries": "node scripts/check-domain-boundaries.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check app.json package.json tsconfig.json vitest.config.ts babel.config.js .eslintrc.cjs .prettierrc.json .github/**/*.yml \"app/**/*.{ts,tsx}\" \"src/**/*.{ts,tsx,json}\" \"tests/**/*.ts\" \"scripts/**/*.mjs\"",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,md,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --max-warnings=0"
+    ]
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.0.0",
+  "dependencies": {
+    "@sentry/react-native": "5.36.0",
+    "@shopify/react-native-skia": "0.1.221",
+    "@supabase/supabase-js": "2.105.4",
+    "@tanstack/react-query": "5.100.9",
+    "expo": "50.0.21",
+    "expo-notifications": "0.27.8",
+    "expo-router": "3.4.10",
+    "react": "18.2.0",
+    "react-native": "0.73.6",
+    "react-native-mmkv": "2.12.2",
+    "react-native-reanimated": "3.6.2",
+    "zustand": "5.0.13"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
+    "@vitest/coverage-v8": "4.1.5",
+    "eslint": "8.57.1",
+    "eslint-config-expo": "7.0.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "4.6.2",
+    "eslint-plugin-react-native": "5.0.0",
+    "husky": "9.1.7",
+    "lint-staged": "17.0.4",
+    "maestro": "2.1.1",
+    "prettier": "3.8.3",
+    "typescript": "5.9.3",
+    "vitest": "4.1.5"
+  }
+}
