@@ -1,0 +1,167 @@
+# =============================================================================
+# HabitQuest .gitignore
+# =============================================================================
+# Stack: React Native + Expo + TypeScript + Supabase
+# Conventions for ignored project docs are at the bottom.
+
+# -----------------------------------------------------------------------------
+# Node / package managers
+# -----------------------------------------------------------------------------
+node_modules/
+.pnp/
+.pnp.*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.npm/
+
+# Lockfile policy: pnpm-lock.yaml SHOULD be committed (reproducible builds).
+# Other lockfiles, only if you intentionally use that package manager.
+
+# -----------------------------------------------------------------------------
+# Build / compile output
+# -----------------------------------------------------------------------------
+dist/
+build/
+out/
+.next/
+.turbo/
+.cache/
+*.tsbuildinfo
+
+# -----------------------------------------------------------------------------
+# Expo
+# -----------------------------------------------------------------------------
+.expo/
+.expo-shared/
+web-build/
+expo-env.d.ts
+
+# Native build artifacts (only if/when you eject from managed workflow)
+ios/Pods/
+ios/build/
+ios/DerivedData/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# EAS build artifacts
+*.apk
+*.aab
+*.ipa
+*.app
+*.dSYM.zip
+
+# -----------------------------------------------------------------------------
+# Environment & secrets — NEVER commit these
+# -----------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision
+*.keystore
+google-services.json
+GoogleService-Info.plist
+
+# -----------------------------------------------------------------------------
+# Supabase
+# -----------------------------------------------------------------------------
+# Local CLI state — generated, not source of truth
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+
+# Generated TypeScript types from the database — regenerate via CLI
+src/data/supabase.types.generated.ts
+
+# -----------------------------------------------------------------------------
+# Tests & coverage
+# -----------------------------------------------------------------------------
+coverage/
+.nyc_output/
+*.lcov
+.maestro/
+.vitest-cache/
+
+# -----------------------------------------------------------------------------
+# Logs & diagnostics
+# -----------------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+.pid
+.seed
+.lock-wscript
+
+# -----------------------------------------------------------------------------
+# Editor / IDE
+# -----------------------------------------------------------------------------
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+*.swp
+*.swo
+*~
+.history/
+
+# -----------------------------------------------------------------------------
+# OS junk
+# -----------------------------------------------------------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+._*
+
+# -----------------------------------------------------------------------------
+# Sentry / monitoring
+# -----------------------------------------------------------------------------
+.sentryclirc
+
+# -----------------------------------------------------------------------------
+# Local-only project documentation (intentionally not committed)
+# -----------------------------------------------------------------------------
+# These files exist on the developer's machine but are kept out of the repo
+# by deliberate choice. README.md is the only doc tracked publicly.
+#
+# WARNING: AI agents cloning this repo will not see these files. The prompts
+# in AGENT_PROMPTS.md reference docs that won't be present in the clone —
+# you'll need to provide them to the agent through another channel (paste
+# into the prompt, mount as a local skill, etc.).
+PROJECT.md
+PRACTICES.md
+CONTRIBUTING.md
+AGENT_PROMPTS.md
+PROPOSALS.md
+BOOTSTRAP_TASKS.md
+
+# PR template — note that GitHub reads this from the committed file.
+# Keeping it ignored means GitHub will not auto-fill PR descriptions.
+.github/PULL_REQUEST_TEMPLATE.md
+
+# Personal scratchpad files — anything matching these patterns stays local
+NOTES.md
+TODO.md
+SCRATCH.md
+*.local.md
+notes/
+scratch/
