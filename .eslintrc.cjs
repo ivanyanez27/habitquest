@@ -14,9 +14,9 @@ module.exports = {
         "no-restricted-imports": [
           "error",
           {
-            "patterns": [
+            patterns: [
               {
-                "group": [
+                group: [
                   "react",
                   "react-native",
                   "expo*",
@@ -28,7 +28,7 @@ module.exports = {
                   "../../ui/*",
                   "@/ui/*"
                 ],
-                "message": "src/domain must stay pure; do not import framework, data, or UI modules."
+                message: "src/domain must stay pure; do not import framework, data, or UI modules."
               }
             ]
           }

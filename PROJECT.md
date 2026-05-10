@@ -240,9 +240,9 @@ These functions live in `src/domain/` and are pure (no I/O, no globals). They ar
 | `computeNextStep(currentStep, event, arc)` | step, `done`/`skipped`/`missed`, arc def | new step (clamped)      | Applies progress rules from §3                  |
 | `computeStreak(checkIns)`            | array of check-ins                          | `{ current, longest }`  | Walks check-ins chronologically                 |
 | `nextAvatarState(prev, event)`       | state, event                                | new state               | Deterministic state machine                     |
-| `resolveMissedDays(quest, checkIns, today)` | quest, existing check-ins, today's local date | array of synthetic missed check-ins | Backfills `missed` rows on app open    |
+| `resolveMissedDays(quest, today)`    | quest, today's local date                   | array of synthetic missed check-ins | Backfills `missed` rows on app open    |
 
-`resolveMissedDays` runs on every app launch and on day-boundary cross. `check_ins` are the source of truth for determining which dates already have input; when a quest has no check-ins yet, missed-day resolution starts from the quest's `started_at` calendar date.
+`resolveMissedDays` runs on every app launch and on day-boundary cross.
 
 ---
 

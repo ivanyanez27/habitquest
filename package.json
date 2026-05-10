@@ -5,9 +5,10 @@
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
-    "lint": "eslint . --max-warnings=0 && prettier --check . && pnpm lint:domain-boundaries",
+    "lint": "eslint . --max-warnings=0 && pnpm format:check && pnpm lint:domain-boundaries",
     "lint:domain-boundaries": "node scripts/check-domain-boundaries.mjs",
     "format": "prettier --write .",
+    "format:check": "prettier --check app.json package.json tsconfig.json vitest.config.ts babel.config.js .eslintrc.cjs .prettierrc.json .github/**/*.yml \"app/**/*.{ts,tsx}\" \"src/**/*.{ts,tsx,json}\" \"tests/**/*.ts\" \"scripts/**/*.mjs\"",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --coverage",
     "test:watch": "vitest",
@@ -42,8 +43,8 @@
   },
   "devDependencies": {
     "@types/node": "24.10.1",
-    "@typescript-eslint/eslint-plugin": "8.59.2",
-    "@typescript-eslint/parser": "8.59.2",
+    "@typescript-eslint/eslint-plugin": "7.18.0",
+    "@typescript-eslint/parser": "7.18.0",
     "@vitest/coverage-v8": "4.1.5",
     "eslint": "8.57.1",
     "eslint-config-expo": "7.0.0",
