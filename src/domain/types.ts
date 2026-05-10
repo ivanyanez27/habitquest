@@ -12,6 +12,7 @@ type QuestCommonFields = {
   target_days: number;
   started_at: string;
   current_step: number;
+  avatar_state: AvatarState;
 };
 
 export type Quest =
