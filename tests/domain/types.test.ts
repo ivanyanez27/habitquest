@@ -11,6 +11,7 @@ describe("domain types", () => {
       target_days: 30,
       started_at: "2026-05-01T12:00:00.000Z",
       current_step: 4,
+      avatar_state: "idle",
       status: "active",
       completed_at: null
     } satisfies Quest;
@@ -23,6 +24,7 @@ describe("domain types", () => {
       target_days: 30,
       started_at: "2026-04-01T08:00:00.000Z",
       current_step: 29,
+      avatar_state: "celebrating",
       status: "completed",
       completed_at: "2026-05-10T23:59:59.999Z"
     } satisfies Quest;
@@ -35,6 +37,7 @@ describe("domain types", () => {
       target_days: 30,
       started_at: "2026-03-15T06:30:00.000Z",
       current_step: 7,
+      avatar_state: "resting",
       status: "abandoned",
       completed_at: null
     } satisfies Quest;
