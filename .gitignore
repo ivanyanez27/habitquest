@@ -147,11 +147,7 @@ $RECYCLE.BIN/
 # in AGENT_PROMPTS.md reference docs that won't be present in the clone —
 # you'll need to provide them to the agent through another channel (paste
 # into the prompt, mount as a local skill, etc.).
-PROJECT.md
-PRACTICES.md
-CONTRIBUTING.md
 AGENT_PROMPTS.md
-PROPOSALS.md
 BOOTSTRAP_TASKS.md
 
 # PR template — note that GitHub reads this from the committed file.
