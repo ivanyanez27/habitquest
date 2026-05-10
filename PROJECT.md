@@ -42,12 +42,12 @@ A user has **one active Quest** at a time. A Quest binds:
 
 ### Progress rules (MVP)
 
-| Event                         | Avatar effect                          | Streak effect    |
-| ----------------------------- | -------------------------------------- | ---------------- |
-| Habit completed               | Advance 1 step on the path             | Streak +1        |
-| Habit skipped (user marks)    | Avatar idles. No advance. No fall.     | Streak resets    |
-| Habit missed (no input by EOD) | Avatar slips back N steps              | Streak resets    |
-| Habit completed after a slip  | Avatar resumes from current position   | Streak restarts at 1 |
+| Event                          | Avatar effect                        | Streak effect        |
+| ------------------------------ | ------------------------------------ | -------------------- |
+| Habit completed                | Advance 1 step on the path           | Streak +1            |
+| Habit skipped (user marks)     | Avatar idles. No advance. No fall.   | Streak resets        |
+| Habit missed (no input by EOD) | Avatar slips back N steps            | Streak resets        |
+| Habit completed after a slip   | Avatar resumes from current position | Streak restarts at 1 |
 
 - **N (slip distance)** is configurable per arc. MVP default: **3 steps**, capped at the start of the current milestone scene.
 - **End of day (EOD)** is the user's local midnight. We rely on device timezone for MVP; server reconciliation comes in v1.
@@ -95,22 +95,22 @@ Multi-arc library, second habit slot, streak freezes, push notifications via ser
 
 ## 5. Tech Stack
 
-| Layer                 | Choice                                        | Rationale                                                                 |
-| --------------------- | --------------------------------------------- | ------------------------------------------------------------------------- |
-| Mobile framework      | **React Native + Expo (managed workflow)**    | Leverages existing React/TypeScript skill; Expo removes native build pain |
-| Language              | **TypeScript (strict mode)**                  | Type safety across UI and domain logic                                    |
-| Navigation            | **Expo Router** (file-based)                  | Idiomatic for Expo SDK 50+, simpler than React Navigation config          |
-| State management      | **Zustand**                                   | Minimal boilerplate, fits the small surface area                          |
-| Server state / cache  | **TanStack Query (React Query)**              | Handles Supabase fetch caching, retries, optimistic updates               |
-| Local persistence     | **MMKV** (via `react-native-mmkv`)            | Fast key-value store for offline state and last-known avatar position     |
-| Backend               | **Supabase** (Postgres + Auth + Realtime)     | Hosted, generous free tier, SQL when needed, realtime if v1 demands it    |
-| Auth                  | **Supabase Auth** (email + password initially) | Comes free with Supabase; OAuth providers added later                     |
-| Animations            | **React Native Reanimated 3** + **Skia**      | Skia for pixel-art rendering and scene transitions                        |
-| Sprite rendering      | **react-native-skia** with PNG sprite sheets  | Avoids per-frame React reconciliation cost                                |
-| Notifications         | **expo-notifications** (local only for MVP)   | No server push needed yet                                                 |
-| Testing               | **Vitest** (domain logic) + **Maestro** (E2E) | Vitest is fast for the pure logic layer; Maestro handles mobile flows     |
-| CI/CD                 | **EAS Build + GitHub Actions**                | Standard for Expo apps                                                    |
-| Error tracking        | **Sentry**                                    | Free tier covers solo-dev volume                                          |
+| Layer                | Choice                                         | Rationale                                                                 |
+| -------------------- | ---------------------------------------------- | ------------------------------------------------------------------------- |
+| Mobile framework     | **React Native + Expo (managed workflow)**     | Leverages existing React/TypeScript skill; Expo removes native build pain |
+| Language             | **TypeScript (strict mode)**                   | Type safety across UI and domain logic                                    |
+| Navigation           | **Expo Router** (file-based)                   | Idiomatic for Expo SDK 50+, simpler than React Navigation config          |
+| State management     | **Zustand**                                    | Minimal boilerplate, fits the small surface area                          |
+| Server state / cache | **TanStack Query (React Query)**               | Handles Supabase fetch caching, retries, optimistic updates               |
+| Local persistence    | **MMKV** (via `react-native-mmkv`)             | Fast key-value store for offline state and last-known avatar position     |
+| Backend              | **Supabase** (Postgres + Auth + Realtime)      | Hosted, generous free tier, SQL when needed, realtime if v1 demands it    |
+| Auth                 | **Supabase Auth** (email + password initially) | Comes free with Supabase; OAuth providers added later                     |
+| Animations           | **React Native Reanimated 3** + **Skia**       | Skia for pixel-art rendering and scene transitions                        |
+| Sprite rendering     | **react-native-skia** with PNG sprite sheets   | Avoids per-frame React reconciliation cost                                |
+| Notifications        | **expo-notifications** (local only for MVP)    | No server push needed yet                                                 |
+| Testing              | **Vitest** (domain logic) + **Maestro** (E2E)  | Vitest is fast for the pure logic layer; Maestro handles mobile flows     |
+| CI/CD                | **EAS Build + GitHub Actions**                 | Standard for Expo apps                                                    |
+| Error tracking       | **Sentry**                                     | Free tier covers solo-dev volume                                          |
 
 **Pinned versions live in `package.json`. Do not bump major versions without updating this document.**
 
@@ -180,48 +180,48 @@ Standard Supabase Auth user. We extend with a `profiles` table.
 
 ### `profiles`
 
-| Column           | Type        | Notes                                |
-| ---------------- | ----------- | ------------------------------------ |
-| `id`             | uuid (PK)   | FK to `auth.users.id`                |
-| `display_name`   | text        | Optional                             |
-| `timezone`       | text        | IANA tz; set at onboarding           |
-| `notify_at`      | time        | Daily check-in reminder              |
-| `created_at`     | timestamptz |                                      |
+| Column         | Type        | Notes                      |
+| -------------- | ----------- | -------------------------- |
+| `id`           | uuid (PK)   | FK to `auth.users.id`      |
+| `display_name` | text        | Optional                   |
+| `timezone`     | text        | IANA tz; set at onboarding |
+| `notify_at`    | time        | Daily check-in reminder    |
+| `created_at`   | timestamptz |                            |
 
 ### `quests`
 
-| Column                | Type        | Notes                                       |
-| --------------------- | ----------- | ------------------------------------------- |
-| `id`                  | uuid (PK)   |                                             |
-| `user_id`             | uuid (FK)   | → `profiles.id`                             |
-| `habit_name`          | text        | User-entered                                |
-| `arc_id`              | text        | References a static arc def (e.g. `mount-aera`) |
-| `target_days`         | int         | MVP: 30                                     |
-| `started_at`          | timestamptz |                                             |
-| `completed_at`        | timestamptz | Null until summit reached                   |
-| `current_step`        | int         | 0-indexed position on the path              |
-| `is_active`           | boolean     | Only one active quest per user (enforced)   |
+| Column         | Type        | Notes                                           |
+| -------------- | ----------- | ----------------------------------------------- |
+| `id`           | uuid (PK)   |                                                 |
+| `user_id`      | uuid (FK)   | → `profiles.id`                                 |
+| `habit_name`   | text        | User-entered                                    |
+| `arc_id`       | text        | References a static arc def (e.g. `mount-aera`) |
+| `target_days`  | int         | MVP: 30                                         |
+| `started_at`   | timestamptz |                                                 |
+| `completed_at` | timestamptz | Null until summit reached                       |
+| `current_step` | int         | 0-indexed position on the path                  |
+| `is_active`    | boolean     | Only one active quest per user (enforced)       |
 
 ### `check_ins`
 
-| Column         | Type        | Notes                                     |
-| -------------- | ----------- | ----------------------------------------- |
-| `id`           | uuid (PK)   |                                           |
-| `quest_id`     | uuid (FK)   |                                           |
-| `local_date`   | date        | The user-local calendar day               |
-| `status`       | enum        | `done` \| `skipped` \| `missed`           |
-| `created_at`   | timestamptz |                                           |
+| Column       | Type        | Notes                           |
+| ------------ | ----------- | ------------------------------- |
+| `id`         | uuid (PK)   |                                 |
+| `quest_id`   | uuid (FK)   |                                 |
+| `local_date` | date        | The user-local calendar day     |
+| `status`     | enum        | `done` \| `skipped` \| `missed` |
+| `created_at` | timestamptz |                                 |
 
 Unique constraint on `(quest_id, local_date)` — one check-in per day per quest.
 
 ### `streaks` (derived, materialized for speed)
 
-| Column           | Type        | Notes                              |
-| ---------------- | ----------- | ---------------------------------- |
-| `quest_id`       | uuid (PK)   |                                    |
-| `current_length` | int         |                                    |
-| `longest`        | int         |                                    |
-| `last_done_date` | date        |                                    |
+| Column           | Type      | Notes |
+| ---------------- | --------- | ----- |
+| `quest_id`       | uuid (PK) |       |
+| `current_length` | int       |       |
+| `longest`        | int       |       |
+| `last_done_date` | date      |       |
 
 Streak values are also recalculable from `check_ins`. The materialized row is for fast reads; treat `check_ins` as the source of truth.
 
@@ -235,12 +235,13 @@ All tables have RLS enabled. Users may read/write only rows where `user_id = aut
 
 These functions live in `src/domain/` and are pure (no I/O, no globals). They are the heart of the app and must be unit-tested.
 
-| Function                             | Input                                       | Output                  | Behaviour                                       |
-| ------------------------------------ | ------------------------------------------- | ----------------------- | ----------------------------------------------- |
-| `computeNextStep(currentStep, event, arc)` | step, `done`/`skipped`/`missed`, arc def | new step (clamped)      | Applies progress rules from §3                  |
-| `computeStreak(checkIns)`            | array of check-ins                          | `{ current, longest }`  | Walks check-ins chronologically                 |
-| `nextAvatarState(prev, event)`       | state, event                                | new state               | Deterministic state machine                     |
-| `resolveMissedDays(quest, today)`    | quest, today's local date                   | array of synthetic missed check-ins | Backfills `missed` rows on app open    |
+| Function                                        | Input                                                        | Output                              | Behaviour                                                                                                                                                                                                                                           |
+| ----------------------------------------------- | ------------------------------------------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `computeNextStep(currentStep, event, arc)`      | step, `done`/`skipped`/`missed`, arc def                     | new step (clamped)                  | Applies progress rules from §3                                                                                                                                                                                                                      |
+| `computeStreak(checkIns)`                       | array of check-ins                                           | `{ current, longest }`              | Walks check-ins chronologically                                                                                                                                                                                                                     |
+| `nextAvatarState(prev, event)`                  | state, event                                                 | new state                           | Deterministic state machine for the daily loop. Never produces `celebrating` — that state is reached only via `applyCheckIn` summit detection.                                                                                                      |
+| `resolveMissedDays(quest, checkIns, today, tz)` | quest, existing check-ins, today's local date, IANA timezone | array of synthetic missed check-ins | Backfills `missed` rows for dates between `started_at` and `today` (exclusive) that have no existing check-in. Caller is responsible for loading check-ins; `check_ins` remains the source of truth (per §7).                                       |
+| `applyCheckIn(quest, event, arc)`               | quest, event, arc def                                        | `{ nextStep, nextAvatarState }`     | Composes `computeNextStep` and `nextAvatarState`. If the new step equals `arc.totalSteps` after a `done` event, sets `nextAvatarState` to `'celebrating'`; otherwise delegates to `nextAvatarState(prev, event)`. Single home for summit detection. |
 
 `resolveMissedDays` runs on every app launch and on day-boundary cross.
 
@@ -257,20 +258,20 @@ A narrative arc is a static JSON file under `src/narrative/arcs/<arc-id>/arc.jso
   "description": "A 30-day climb to the summit.",
   "totalSteps": 30,
   "milestones": [
-    { "atStep": 0,  "scene": "base-camp",   "label": "Base Camp" },
-    { "atStep": 10, "scene": "treeline",    "label": "Above the Treeline" },
-    { "atStep": 20, "scene": "ridge",       "label": "The Ridge" },
-    { "atStep": 30, "scene": "summit",      "label": "Summit" }
+    { "atStep": 0, "scene": "base-camp", "label": "Base Camp" },
+    { "atStep": 10, "scene": "treeline", "label": "Above the Treeline" },
+    { "atStep": 20, "scene": "ridge", "label": "The Ridge" },
+    { "atStep": 30, "scene": "summit", "label": "Summit" }
   ],
   "slipDistance": 3,
   "spriteSheet": "sprites/avatar.png",
   "spriteStates": {
-    "idle":         { "frames": [0,1],     "fps": 4 },
-    "walking":      { "frames": [2,3,4,5], "fps": 8 },
-    "climbing":     { "frames": [6,7,8,9], "fps": 8 },
-    "slipping":     { "frames": [10,11],   "fps": 12 },
-    "celebrating":  { "frames": [12,13],   "fps": 6 },
-    "resting":      { "frames": [14],      "fps": 1 }
+    "idle": { "frames": [0, 1], "fps": 4 },
+    "walking": { "frames": [2, 3, 4, 5], "fps": 8 },
+    "climbing": { "frames": [6, 7, 8, 9], "fps": 8 },
+    "slipping": { "frames": [10, 11], "fps": 12 },
+    "celebrating": { "frames": [12, 13], "fps": 6 },
+    "resting": { "frames": [14], "fps": 1 }
   }
 }
 ```
@@ -338,4 +339,4 @@ If you are an AI agent picking up this project:
 
 ---
 
-*Document version: 0.1 — initial draft. Update the version and add a changelog entry when revising.*
+_Document version: 0.1 — initial draft. Update the version and add a changelog entry when revising._

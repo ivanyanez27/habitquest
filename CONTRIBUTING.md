@@ -14,22 +14,22 @@ If you have **30 minutes**, read [`PROJECT.md`](./PROJECT.md) in full, then [`PR
 
 ## Where to find what
 
-| Your question                                           | Document                                          |
-| ------------------------------------------------------- | ------------------------------------------------- |
-| What is this project? Why does it exist?                | [`PROJECT.md`](./PROJECT.md) §1                   |
-| How do I install and run it?                            | [`README.md`](./README.md) — Quick start          |
-| What's in the MVP? What's out of scope?                 | [`PROJECT.md`](./PROJECT.md) §4                   |
-| Why this tech stack?                                    | [`PROJECT.md`](./PROJECT.md) §5                   |
-| How is the code organized? Where does X live?           | [`PROJECT.md`](./PROJECT.md) §6                   |
-| What's the database schema?                             | [`PROJECT.md`](./PROJECT.md) §7                   |
-| What are the avatar / streak rules?                     | [`PROJECT.md`](./PROJECT.md) §3                   |
-| How do I add a new narrative arc?                       | [`PROJECT.md`](./PROJECT.md) §9                   |
-| How should I name things, structure functions, etc.?    | [`PRACTICES.md`](./PRACTICES.md) Part 1           |
-| How should I think about UI/UX decisions?               | [`PRACTICES.md`](./PRACTICES.md) Part 2           |
-| What are the security baselines?                        | [`PRACTICES.md`](./PRACTICES.md) Part 3           |
-| How do I keep things performant?                        | [`PRACTICES.md`](./PRACTICES.md) Part 4           |
-| What's expected when I open a PR?                       | [`.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md) |
-| I have an idea outside the current scope                | Add it to `PROPOSALS.md` (see below)              |
+| Your question                                        | Document                                                                 |
+| ---------------------------------------------------- | ------------------------------------------------------------------------ |
+| What is this project? Why does it exist?             | [`PROJECT.md`](./PROJECT.md) §1                                          |
+| How do I install and run it?                         | [`README.md`](./README.md) — Quick start                                 |
+| What's in the MVP? What's out of scope?              | [`PROJECT.md`](./PROJECT.md) §4                                          |
+| Why this tech stack?                                 | [`PROJECT.md`](./PROJECT.md) §5                                          |
+| How is the code organized? Where does X live?        | [`PROJECT.md`](./PROJECT.md) §6                                          |
+| What's the database schema?                          | [`PROJECT.md`](./PROJECT.md) §7                                          |
+| What are the avatar / streak rules?                  | [`PROJECT.md`](./PROJECT.md) §3                                          |
+| How do I add a new narrative arc?                    | [`PROJECT.md`](./PROJECT.md) §9                                          |
+| How should I name things, structure functions, etc.? | [`PRACTICES.md`](./PRACTICES.md) Part 1                                  |
+| How should I think about UI/UX decisions?            | [`PRACTICES.md`](./PRACTICES.md) Part 2                                  |
+| What are the security baselines?                     | [`PRACTICES.md`](./PRACTICES.md) Part 3                                  |
+| How do I keep things performant?                     | [`PRACTICES.md`](./PRACTICES.md) Part 4                                  |
+| What's expected when I open a PR?                    | [`.github/PULL_REQUEST_TEMPLATE.md`](./.github/PULL_REQUEST_TEMPLATE.md) |
+| I have an idea outside the current scope             | Add it to `PROPOSALS.md` (see below)                                     |
 
 ---
 
@@ -94,6 +94,78 @@ If you are an AI agent reading this directly: also read [`PROJECT.md` §13](./PR
 
 ---
 
+## Handling ambiguities in `PROJECT.md`
+
+`PROJECT.md` is the source of truth for what HabitQuest is and how it's
+built. When it's wrong or incomplete, that's a documentation bug, not
+a coding decision. Treat it the same way you'd treat a failing test:
+fix the spec first, then proceed.
+
+### The convention
+
+When you (or an AI agent) hit an ambiguity, missing detail, or
+contradiction in `PROJECT.md` mid-implementation:
+
+1. **Stop. Don't invent.** A plausible guess that ships is worse than
+   a question that pauses for an hour. Inventions become facts the
+   next agent reads as authoritative.
+
+2. **Resolve the spec first, in its own change.** Update the relevant
+   section of `PROJECT.md` so it's unambiguous. This goes in either:
+   - A small standalone PR (`docs:` prefix), merged before
+     implementation continues, OR
+   - As the first commit of the implementation PR, clearly separated
+     from the code commits.
+
+   The spec must be correct at every merge to `main`. A code change
+   built on an out-of-date spec creates drift between what the docs
+   promise and what the code does — and the next agent that reads
+   the spec will write code based on the wrong contract.
+
+3. **Keep current PRs scoped.** If resolving the ambiguity reveals
+   new work (a new function, a new field, a new flow), that work
+   becomes its own sub-task — not an expansion of the current PR.
+   The PR you opened for X stays about X. New scope = new branch.
+
+### Why this matters
+
+Two failure modes this prevents:
+
+- **Silent invention.** An agent that doesn't stop will produce
+  plausible-looking code that doesn't match the intent. You find out
+  weeks later when a downstream feature behaves wrong.
+- **PR sprawl.** An agent that absorbs every discovered gap into its
+  current PR ends up with 600-line PRs that touch four unrelated
+  areas. Reviews suffer; merge conflicts multiply; the discipline of
+  small focused changes erodes.
+
+### What this looks like in practice
+
+A worked example from the project's own history:
+
+> While implementing `nextAvatarState`, the agent noticed that
+> `PROJECT.md §3` requires a `celebrating` state but `§8` only
+> defines three input events (`done`/`skipped`/`missed`). With those
+> inputs alone, `celebrating` could not be reached.
+>
+> The agent stopped and asked. We resolved it by:
+>
+> 1. Updating `§8` to add a new function, `applyCheckIn`, as the
+>    single home for summit detection.
+> 2. Keeping the in-flight PR scoped to `nextAvatarState` only.
+> 3. Filing `applyCheckIn` as its own sub-task.
+>
+> Result: the in-flight PR stayed clean and small; the spec stayed
+> truthful; the new work got its own focused review.
+
+### When the agent is _you_
+
+Same rules. Hit an ambiguity, stop, raise it, resolve the spec,
+continue. The convention exists because solo developers without it
+drift just as easily as multi-agent teams.
+
+---
+
 ## Proposing changes outside scope
 
 The hardest part of a solo side project is saying no to your own ideas. `PROPOSALS.md` exists for this. The format is intentionally lightweight:
@@ -105,19 +177,23 @@ The hardest part of a solo side project is saying no to your own ideas. `PROPOSA
 **Status:** proposed | accepted (Phase N) | rejected | deferred
 
 ### What
+
 One paragraph.
 
 ### Why
+
 What problem does it solve? Whose problem?
 
 ### Cost
+
 Rough sense of effort. New screens? New tables? New dependencies?
 
 ### Open questions
+
 What would need to be answered before this could be built?
 ```
 
-Add the entry, open a PR with just the proposal, get it accepted into a phase, *then* implement it. The discipline is the point.
+Add the entry, open a PR with just the proposal, get it accepted into a phase, _then_ implement it. The discipline is the point.
 
 ---
 
