@@ -1,4 +1,4 @@
-import type { AvatarState, QuestEvent } from "./quest";
+import type { AvatarState, QuestEvent } from "./types";
 
 /**
  * Daily-loop avatar transitions.
