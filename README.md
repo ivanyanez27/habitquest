@@ -59,10 +59,10 @@ Then press `i` for iOS, `a` for Android, or scan the QR code with Expo Go.
 
 ### Environment variables
 
-| Variable                       | Description                                 |
-| ------------------------------ | ------------------------------------------- |
-| `EXPO_PUBLIC_SUPABASE_URL`     | Your Supabase project URL                   |
-| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon (public) key             |
+| Variable                        | Description                     |
+| ------------------------------- | ------------------------------- |
+| `EXPO_PUBLIC_SUPABASE_URL`      | Your Supabase project URL       |
+| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | Your Supabase anon (public) key |
 
 Never commit `.env`. The anon key is safe in client code; it's protected by Row-Level Security.
 
@@ -70,15 +70,15 @@ Never commit `.env`. The anon key is safe in client code; it's protected by Row-
 
 ## Scripts
 
-| Command            | What it does                                    |
-| ------------------ | ----------------------------------------------- |
-| `pnpm start`       | Start the Expo dev server                       |
-| `pnpm ios`         | Open the app in the iOS Simulator               |
-| `pnpm android`     | Open the app in the Android Emulator            |
-| `pnpm test`        | Run domain unit tests (Vitest)                  |
-| `pnpm test:e2e`    | Run Maestro flows                               |
-| `pnpm lint`        | ESLint + Prettier check                         |
-| `pnpm typecheck`   | TypeScript strict check, no emit                |
+| Command          | What it does                         |
+| ---------------- | ------------------------------------ |
+| `pnpm start`     | Start the Expo dev server            |
+| `pnpm ios`       | Open the app in the iOS Simulator    |
+| `pnpm android`   | Open the app in the Android Emulator |
+| `pnpm test`      | Run domain unit tests (Vitest)       |
+| `pnpm test:e2e`  | Run Maestro flows                    |
+| `pnpm lint`      | ESLint + Prettier check              |
+| `pnpm typecheck` | TypeScript strict check, no emit     |
 
 ---
 

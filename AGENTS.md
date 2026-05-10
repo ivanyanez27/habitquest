@@ -23,16 +23,17 @@ This is a **pre-MVP** project. The README describes the intended tech stack and 
 
 Once a `package.json` exists, the update script will run `pnpm install`. The README documents the following dev commands:
 
-| Command | Purpose |
-|---|---|
-| `pnpm start` | Start Expo dev server |
-| `pnpm test` | Run Vitest unit tests |
-| `pnpm lint` | ESLint + Prettier check |
+| Command          | Purpose                 |
+| ---------------- | ----------------------- |
+| `pnpm start`     | Start Expo dev server   |
+| `pnpm test`      | Run Vitest unit tests   |
+| `pnpm lint`      | ESLint + Prettier check |
 | `pnpm typecheck` | TypeScript strict check |
 
 ### Environment variables
 
 Two env vars are required (see README):
+
 - `EXPO_PUBLIC_SUPABASE_URL` — Supabase project URL
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY` — Supabase anon key
 

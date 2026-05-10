@@ -1,6 +1,6 @@
 # Engineering Practices
 
-> A living document of programming and design principles. Stack-agnostic. Each section explains *why*, not just *what* — because a rule you don't understand is a rule you'll break the moment it's inconvenient.
+> A living document of programming and design principles. Stack-agnostic. Each section explains _why_, not just _what_ — because a rule you don't understand is a rule you'll break the moment it's inconvenient.
 
 ---
 
@@ -16,7 +16,7 @@ The single thread running through everything below: **optimize for the reader, n
 
 ### 1.1 Naming
 
-**Names are the smallest unit of documentation.** Most code has no comments; the names *are* the explanation.
+**Names are the smallest unit of documentation.** Most code has no comments; the names _are_ the explanation.
 
 #### Be specific over clever
 
@@ -44,7 +44,7 @@ These tell the reader nothing. If `data` is the only word that fits, the variabl
 
 #### Functions should do one thing at one level of abstraction
 
-A function that opens a database connection, parses JSON, validates user input, *and* sends an email is four functions wearing a trenchcoat. Each is testable alone; the combination is not.
+A function that opens a database connection, parses JSON, validates user input, _and_ sends an email is four functions wearing a trenchcoat. Each is testable alone; the combination is not.
 
 The mixing of abstraction levels is the more subtle failure: if one line is `users.forEach(...)` and the next is `buffer[i++] = b & 0xff`, the reader has to context-switch inside the same function.
 
@@ -60,13 +60,13 @@ This is the most leveraged structural rule in software. Architectures that obey 
 
 #### Prefer composition over inheritance
 
-Inheritance couples the child class to the parent's *internals*. Six months later, when the parent changes, the children break in ways nobody predicted. Composition — passing collaborators in — has a clear, narrow contract.
+Inheritance couples the child class to the parent's _internals_. Six months later, when the parent changes, the children break in ways nobody predicted. Composition — passing collaborators in — has a clear, narrow contract.
 
 Use inheritance only when the relationship is genuinely "is-a" and stable. Use composition for everything else.
 
 #### Group by feature, not by type
 
-A folder structure of `controllers/`, `models/`, `views/` looks tidy until you ship a feature that touches all three and have to edit files in eight directories. Group code that changes together. Feature-folders make the codebase navigable by *intent*.
+A folder structure of `controllers/`, `models/`, `views/` looks tidy until you ship a feature that touches all three and have to edit files in eight directories. Group code that changes together. Feature-folders make the codebase navigable by _intent_.
 
 ---
 
@@ -84,7 +84,7 @@ The compiler is the cheapest, most thorough reviewer you'll ever have. Give it m
 
 #### Parse, don't validate
 
-A validator returns a boolean. A parser returns a *narrower type*. If you call `validate(input)` and proceed using the same loose `unknown`, every downstream function still has to defensively re-check. If you call `parse(input)` and get back a `User` type, every downstream function can trust it.
+A validator returns a boolean. A parser returns a _narrower type_. If you call `validate(input)` and proceed using the same loose `unknown`, every downstream function still has to defensively re-check. If you call `parse(input)` and get back a `User` type, every downstream function can trust it.
 
 This is the single biggest type-safety upgrade most codebases can make.
 
@@ -106,7 +106,7 @@ Reject bad input the moment it crosses into your system — at the API endpoint,
 
 #### Distinguish expected failures from bugs
 
-A user typing a bad password is *expected*; you handle it and respond. A null reference deep in your billing code is a *bug*; you log it loudly, fail the request, and fix the cause. Conflating these is how you end up with `try { ... } catch (e) {}` swallowing real defects for years.
+A user typing a bad password is _expected_; you handle it and respond. A null reference deep in your billing code is a _bug_; you log it loudly, fail the request, and fix the cause. Conflating these is how you end up with `try { ... } catch (e) {}` swallowing real defects for years.
 
 #### Never log and re-throw
 
@@ -120,7 +120,7 @@ When you catch and re-throw, attach the original error (`throw new MyError('cont
 
 ### 1.5 Comments
 
-#### Write comments for the *why*, not the *what*
+#### Write comments for the _why_, not the _what_
 
 `// increment i` is noise. `// Skip the first row — it's the header row from the legacy export format` is gold. Code says what; comments say why.
 
@@ -156,7 +156,7 @@ Optimizing for an edge case at the cost of the common case is the most common UX
 
 #### One primary action per screen
 
-If everything is bold, nothing is. The user's eye should land on *the* thing you want them to do. Secondary actions de-emphasized; tertiary actions in a menu.
+If everything is bold, nothing is. The user's eye should land on _the_ thing you want them to do. Secondary actions de-emphasized; tertiary actions in a menu.
 
 #### Group related things; separate unrelated things
 
@@ -180,7 +180,7 @@ Every field is a friction point. If you don't need it for this step, don't ask f
 
 #### Validate at the right time
 
-Validating on every keystroke before the user has finished typing is hostile ("Email invalid" on the third character). Validating only on submit makes them re-find the broken field. The right answer: validate on *blur* (when they leave the field), and re-validate on submit. Show success cues, not just errors.
+Validating on every keystroke before the user has finished typing is hostile ("Email invalid" on the third character). Validating only on submit makes them re-find the broken field. The right answer: validate on _blur_ (when they leave the field), and re-validate on submit. Show success cues, not just errors.
 
 #### Error messages should explain how to fix it
 
@@ -196,7 +196,7 @@ There is a special place reserved for software that wipes a form on validation f
 
 #### Every action needs a response within 100ms
 
-Not necessarily completion — a spinner, a button state change, *something* that says "I heard you." Users interpret silence as a broken click. Below 100ms feels instant; up to 1s feels responsive; beyond that, you need a progress indicator.
+Not necessarily completion — a spinner, a button state change, _something_ that says "I heard you." Users interpret silence as a broken click. Below 100ms feels instant; up to 1s feels responsive; beyond that, you need a progress indicator.
 
 #### Show four states for every async operation
 
@@ -208,7 +208,7 @@ If the operation almost always succeeds (liking a post, marking a habit done), u
 
 #### Empty states are real screens
 
-A list with zero items is a screen the user *will* see — on first use, after deleting everything, when filters match nothing. "No results" is a wasted opportunity; "No tasks yet — here's how to add one" is onboarding for free.
+A list with zero items is a screen the user _will_ see — on first use, after deleting everything, when filters match nothing. "No results" is a wasted opportunity; "No tasks yet — here's how to add one" is onboarding for free.
 
 ---
 
@@ -278,7 +278,7 @@ Env vars are convenient but get leaked through `printenv`, crash dumps, error pa
 
 #### Distinguish public from secret keys
 
-Most APIs have both. The public key (e.g. a Supabase anon key, a Stripe publishable key) is *meant* to ship to clients and is protected by other mechanisms (RLS, restricted scopes). The secret key (service role, secret key) must never reach the client. Mixing them up is one of the most common breaches.
+Most APIs have both. The public key (e.g. a Supabase anon key, a Stripe publishable key) is _meant_ to ship to clients and is protected by other mechanisms (RLS, restricted scopes). The secret key (service role, secret key) must never reach the client. Mixing them up is one of the most common breaches.
 
 #### Rotate on a schedule, and on every suspected exposure
 
@@ -294,7 +294,7 @@ Authentication looks simple and is not. Session fixation, timing attacks on pass
 
 #### Hash passwords with a slow, salted, modern algorithm
 
-bcrypt, scrypt, or Argon2 — never MD5, SHA-1, or plain SHA-256. Speed is a *liability* in password hashing; the slowness is what makes brute-forcing infeasible. If you're storing passwords yourself, you've already violated the previous principle.
+bcrypt, scrypt, or Argon2 — never MD5, SHA-1, or plain SHA-256. Speed is a _liability_ in password hashing; the slowness is what makes brute-forcing infeasible. If you're storing passwords yourself, you've already violated the previous principle.
 
 #### Implement account lockout / rate limiting on auth endpoints
 
@@ -314,7 +314,7 @@ Whoever has the token is the user, until proven otherwise. Use HttpOnly + Secure
 
 #### Authentication ≠ authorization
 
-Authentication answers "who are you?" Authorization answers "are you allowed to do this?" A logged-in user is not automatically permitted to view *every* record in the database. Confusing the two is how mass data leaks happen.
+Authentication answers "who are you?" Authorization answers "are you allowed to do this?" A logged-in user is not automatically permitted to view _every_ record in the database. Confusing the two is how mass data leaks happen.
 
 #### Check authorization at every endpoint, not just in the UI
 
@@ -326,7 +326,7 @@ Permission systems should start from "no access" and grant explicitly. The oppos
 
 #### Use row-level security or equivalent at the database
 
-A bug in your application code can let User A request User B's data. A correctly-configured RLS policy makes that impossible at the database layer regardless of application bugs. Defense in depth: app-layer checks *and* DB-layer enforcement.
+A bug in your application code can let User A request User B's data. A correctly-configured RLS policy makes that impossible at the database layer regardless of application bugs. Defense in depth: app-layer checks _and_ DB-layer enforcement.
 
 ---
 
@@ -334,7 +334,7 @@ A bug in your application code can let User A request User B's data. A correctly
 
 #### All input is hostile until proven otherwise
 
-Form fields, URL parameters, headers, file uploads, webhook payloads, third-party API responses — *all* of it. Validate shape, type, and bounds at the boundary. Never use raw input to construct queries, file paths, shell commands, or rendered HTML.
+Form fields, URL parameters, headers, file uploads, webhook payloads, third-party API responses — _all_ of it. Validate shape, type, and bounds at the boundary. Never use raw input to construct queries, file paths, shell commands, or rendered HTML.
 
 #### Use parameterized queries — always
 
@@ -378,7 +378,7 @@ Logs flow to many places — local files, log aggregators, third-party services,
 
 #### Update dependencies; pin versions; audit periodically
 
-The largest source of vulnerabilities in modern apps is outdated dependencies. Use `npm audit`, `pip-audit`, Dependabot, Renovate. Pin versions for reproducibility, but actually *review* the renovate PRs — they're not noise.
+The largest source of vulnerabilities in modern apps is outdated dependencies. Use `npm audit`, `pip-audit`, Dependabot, Renovate. Pin versions for reproducibility, but actually _review_ the renovate PRs — they're not noise.
 
 #### Principle of least privilege
 
@@ -392,7 +392,7 @@ When something goes wrong, "what do we do" should not be a brainstorm. Document:
 
 ## Part 4 — Performance
 
-> Performance is a feature. Slow software loses users, slow APIs lose customers, slow build pipelines lose engineering hours. The principles here are about *not paying for it later*.
+> Performance is a feature. Slow software loses users, slow APIs lose customers, slow build pipelines lose engineering hours. The principles here are about _not paying for it later_.
 
 ### 4.1 First principles
 
@@ -406,7 +406,7 @@ When something goes wrong, "what do we do" should not be a brainstorm. Document:
 
 #### The fastest operation is the one you don't do
 
-Caching, memoization, batching, debouncing — these all win by *avoiding* work, not doing it faster. Look for redundant work before looking for faster algorithms.
+Caching, memoization, batching, debouncing — these all win by _avoiding_ work, not doing it faster. Look for redundant work before looking for faster algorithms.
 
 #### Performance budgets, not performance vibes
 
@@ -494,7 +494,7 @@ A page that's 80% loaded but responsive feels faster than a page that's 100% loa
 
 #### Indexes are usually the answer to "why is this query slow"
 
-A full table scan over a million rows is slow. The same query against an indexed column is microseconds. Identify slow queries (every database has a tool for this), look at the query plan, add the index. Then *measure again* — indexes have write costs and aren't always wins.
+A full table scan over a million rows is slow. The same query against an indexed column is microseconds. Identify slow queries (every database has a tool for this), look at the query plan, add the index. Then _measure again_ — indexes have write costs and aren't always wins.
 
 #### Connection pooling, not connection per request
 
@@ -532,7 +532,7 @@ A few rules that don't fit neatly into a category but apply everywhere.
 
 #### Make the change easy, then make the easy change
 
-If a change feels hard, the right move is often *not* to power through. It's to first refactor the code into a state where the change is easy, then make it. Two small clean commits beat one large messy one.
+If a change feels hard, the right move is often _not_ to power through. It's to first refactor the code into a state where the change is easy, then make it. Two small clean commits beat one large messy one.
 
 #### Boring technology, by default
 
@@ -552,4 +552,4 @@ Every layer of abstraction, every configuration option, every "what if we need i
 
 ---
 
-*Document version 0.1. This file is meant to evolve — add what you learn, remove what stops being true.*
+_Document version 0.1. This file is meant to evolve — add what you learn, remove what stops being true._
