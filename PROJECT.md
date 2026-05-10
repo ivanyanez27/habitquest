@@ -190,17 +190,18 @@ Standard Supabase Auth user. We extend with a `profiles` table.
 
 ### `quests`
 
-| Column         | Type        | Notes                                           |
-| -------------- | ----------- | ----------------------------------------------- |
-| `id`           | uuid (PK)   |                                                 |
-| `user_id`      | uuid (FK)   | → `profiles.id`                                 |
-| `habit_name`   | text        | User-entered                                    |
-| `arc_id`       | text        | References a static arc def (e.g. `mount-aera`) |
-| `target_days`  | int         | MVP: 30                                         |
-| `started_at`   | timestamptz |                                                 |
-| `completed_at` | timestamptz | Null until summit reached                       |
-| `current_step` | int         | 0-indexed position on the path                  |
-| `is_active`    | boolean     | Only one active quest per user (enforced)       |
+| Column         | Type        | Notes                                                                                                                                                                                                                        |
+| -------------- | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`           | uuid (PK)   |                                                                                                                                                                                                                              |
+| `user_id`      | uuid (FK)   | → `profiles.id`                                                                                                                                                                                                              |
+| `habit_name`   | text        | User-entered                                                                                                                                                                                                                 |
+| `arc_id`       | text        | References a static arc def (e.g. `mount-aera`)                                                                                                                                                                              |
+| `target_days`  | int         | MVP: 30                                                                                                                                                                                                                      |
+| `started_at`   | timestamptz |                                                                                                                                                                                                                              |
+| `completed_at` | timestamptz | Null until summit reached                                                                                                                                                                                                    |
+| `current_step` | int         | 0-indexed position on the path                                                                                                                                                                                               |
+| `is_active`    | boolean     | Only one active quest per user (enforced)                                                                                                                                                                                    |
+| `avatar_state` | text        | NOT NULL, default `'idle'`. Enum: `'idle'` \| `'walking'` \| `'climbing'` \| `'slipping'` \| `'celebrating'` \| `'resting'`. Current avatar state for animation rendering; updated by `applyCheckIn` (§8) on every check-in. |
 
 ### `check_ins`
 

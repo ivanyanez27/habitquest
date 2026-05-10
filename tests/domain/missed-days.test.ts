@@ -13,6 +13,7 @@ function activeQuest(
     arc_id: "mount-aera",
     target_days: 30,
     current_step: 0,
+    avatar_state: "idle",
     status: "active",
     completed_at: null,
     ...partial
