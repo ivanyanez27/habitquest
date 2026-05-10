@@ -150,10 +150,6 @@ $RECYCLE.BIN/
 AGENT_PROMPTS.md
 BOOTSTRAP_TASKS.md
 
-# PR template — note that GitHub reads this from the committed file.
-# Keeping it ignored means GitHub will not auto-fill PR descriptions.
-.github/PULL_REQUEST_TEMPLATE.md
-
 # Personal scratchpad files — anything matching these patterns stays local
 NOTES.md
 TODO.md
