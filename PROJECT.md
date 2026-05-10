@@ -215,6 +215,8 @@ Standard Supabase Auth user. We extend with a `profiles` table.
 
 Unique constraint on `(quest_id, local_date)` — one check-in per day per quest.
 
+Before insert, the domain layer may build rows as `NewCheckIn` (`id` and `created_at` omitted); repositories persist and return `CheckIn`.
+
 ### `streaks` (derived, materialized for speed)
 
 | Column           | Type      | Notes |
@@ -241,7 +243,7 @@ These functions live in `src/domain/` and are pure (no I/O, no globals). They ar
 | `computeNextStep(currentStep, event, arc)`      | step, `done`/`skipped`/`missed`, arc def                     | new step (clamped)                  | Applies progress rules from §3                                                                                                                                                                                                                      |
 | `computeStreak(checkIns)`                       | array of check-ins                                           | `{ current, longest }`              | Walks check-ins chronologically                                                                                                                                                                                                                     |
 | `nextAvatarState(prev, event)`                  | state, event                                                 | new state                           | Deterministic state machine for the daily loop. Never produces `celebrating` — that state is reached only via `applyCheckIn` summit detection.                                                                                                      |
-| `resolveMissedDays(quest, checkIns, today, tz)` | quest, existing check-ins, today's local date, IANA timezone | array of synthetic missed check-ins | Backfills `missed` rows for dates between `started_at` and `today` (exclusive) that have no existing check-in. Caller is responsible for loading check-ins; `check_ins` remains the source of truth (per §7).                                       |
+| `resolveMissedDays(quest, checkIns, today, tz)` | quest, existing check-ins, `today` as a `Date` (interpreted in `tz`), IANA timezone | `NewCheckIn[]` — synthetic `missed` rows only | Backfills `missed` rows for local dates from `started_at` through the day before `today` that have no existing check-in (any status). Caller persists via repository; `check_ins` remains the source of truth (per §7). Synthetic rows use the `NewCheckIn` type (`id` / `created_at` assigned on insert).                                       |
 | `applyCheckIn(quest, event, arc)`               | quest, event, arc def                                        | `{ nextStep, nextAvatarState }`     | Composes `computeNextStep` and `nextAvatarState`. If the new step equals `arc.totalSteps` after a `done` event, sets `nextAvatarState` to `'celebrating'`; otherwise delegates to `nextAvatarState(prev, event)`. Single home for summit detection. |
 
 `resolveMissedDays` runs on every app launch and on day-boundary cross.

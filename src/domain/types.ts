@@ -30,6 +30,12 @@ export type CheckIn = {
   created_at: string;
 };
 
+/**
+ * Row awaiting persistence. Repositories accept this shape and return {@link CheckIn}
+ * after insert (assigning `id` and server `created_at`).
+ */
+export type NewCheckIn = Omit<CheckIn, "id" | "created_at">;
+
 export type Streak = {
   quest_id: string;
   current_length: number;

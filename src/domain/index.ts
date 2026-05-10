@@ -5,6 +5,7 @@ export type {
   CheckIn,
   CheckInStatus,
   NarrativeArc,
+  NewCheckIn,
   Quest,
   QuestEvent,
   QuestStatus,
@@ -12,6 +13,7 @@ export type {
 } from "./types";
 
 export { applyCheckIn } from "./apply-check-in";
-export { nextAvatarState } from "./avatar-state";
 export { computeNextStep } from "./progress";
 export { computeStreak } from "./streak";
+export { nextAvatarState } from "./avatar-state";
+export { resolveMissedDays } from "./missed-days";
